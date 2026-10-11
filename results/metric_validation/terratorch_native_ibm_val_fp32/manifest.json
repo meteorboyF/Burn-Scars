@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "tool": "validate_terratorch_native",
+  "config_name": "validate_terratorch_native",
+  "config_hash": "5314254fb309f85266156658474da95bb213f917fffd6bfa750091a39a4e2d69",
+  "config": {
+    "subdir": "hls_burn_scars",
+    "ckpt_subdir": "prithvi2_burnscars",
+    "out": "results/metric_validation/terratorch_native_ibm_val_fp32",
+    "precision": "32",
+    "batch_size": 4
+  },
+  "dataset_hash": null,
+  "split_hash": "47c1507c72593760777de8a63081c7892b9df72bd86c1ca427a10eba2f8080eb",
+  "git_sha": "0027edc70245401eb4ae96e907960fd243f15597",
+  "seed": 2,
+  "smoke": false,
+  "environment": {
+    "python": "3.12.13",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "rasterio": "1.5.2",
+      "pyproj": "3.8.0",
+      "shapely": "2.2.0",
+      "matplotlib": "3.11.2",
+      "torch": "2.14.1+cpu",
+      "terratorch": "1.2.13",
+      "segmentation-models-pytorch": "0.5.0"
+    },
+    "cuda": null,
+    "gpu": null
+  },
+  "started_utc": "2026-10-11T16:13:27Z",
+  "metrics": {
+    "val/Accuracy": 0.9590240716934204,
+    "val/Boundary_mIoU": 0.31405922770500183,
+    "val/Class_Accuracy_Burn scar": 0.9376007318496704,
+    "val/Class_Accuracy_Not burned": 0.9804474711418152,
+    "val/F1_Score": 0.9443802833557129,
+    "val/IoU_Burn scar": 0.8231562376022339,
+    "val/IoU_Not burned": 0.9719184041023254,
+    "val/Pixel_Accuracy": 0.9751645922660828,
+    "val/loss": 0.09669028967618942,
+    "val/mIoU": 0.897537350654602,
+    "val/mIoU_Micro": 0.9515330195426941
+  },
+  "extra": {
+    "n_val_ids": 160,
+    "config_changes": "roots->flat symlinks; all splits->IBM val.txt; precision=32; backbone_pretrained=false; batch_size=4; accelerator=cpu"
+  },
+  "wall_clock_s": 1479.402,
+  "complete": true
+}

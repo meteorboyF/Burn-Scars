@@ -1,0 +1,11 @@
+/home/meteorboyf/Paper/Burn/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Seed set to 2
+/home/meteorboyf/Paper/Burn/.venv/lib/python3.12/site-packages/lightning/pytorch/cli.py:734: `SemanticSegmentationTask.configure_optimizers` will be overridden by `MyLightningCLI.configure_optimizers`.
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+💡 Tip: For seamless cloud uploads and versioning, try installing [litmodels](https://pypi.org/project/litmodels/) to enable LitModelCheckpoint, which syncs automatically with the Lightning model registry.
+Restoring states from the checkpoint path at /home/meteorboyf/Paper/Burn/data/prithvi2_burnscars/Prithvi_EO_V2_300M_BurnScars.pt
+Loaded model weights from the checkpoint at /home/meteorboyf/Paper/Burn/data/prithvi2_burnscars/Prithvi_EO_V2_300M_BurnScars.pt
+/home/meteorboyf/Paper/Burn/.venv/lib/python3.12/site-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.

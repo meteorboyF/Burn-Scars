@@ -29,3 +29,9 @@ paper/main.pdf
 *.pem
 *.key
 kaggle.json
+
+# Written into the CWD by TerraTorch/LightningCLI; never commit
+/config.yaml
+/config_deploy.yaml
+/terratorch_config_used.yaml
+/lightning_logs/

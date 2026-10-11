@@ -72,7 +72,8 @@ def main(argv=None):
     exe = Path(sys.executable).parent / "terratorch"
     r = subprocess.run([str(exe), "validate", "-c", str(cfg_path), "--ckpt_path",
                         str(ckdir / "Prithvi_EO_V2_300M_BurnScars.pt")],
-                       capture_output=True, text=True, env={**os.environ, "OMP_NUM_THREADS": "4"})
+                       capture_output=True, text=True, env={**os.environ, "OMP_NUM_THREADS": "4"},
+                       cwd=out)  # LightningCLI writes config*.yaml into its CWD
     (out / "terratorch_stdout.txt").write_text(r.stdout[-20000:])
     (out / "terratorch_stderr_tail.txt").write_text(r.stderr[-5000:])
     if r.returncode != 0:

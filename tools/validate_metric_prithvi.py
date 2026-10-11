@@ -12,6 +12,7 @@ A match validates OUR METRIC AND PREPROCESSING ONLY. It does not reproduce
 training, and the card's checkpoint was itself selected on this val split.
 """
 import json
+import os
 import sys
 import tempfile
 import time
@@ -47,7 +48,12 @@ def load_model(ckpt_dir: Path):
     with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False) as tmp:
         yaml.safe_dump(cfg, tmp)
     ckpt = ckpt_dir / "Prithvi_EO_V2_300M_BurnScars.pt"
-    lim = LightningInferenceModel.from_config(tmp.name, str(ckpt))
+    cwd = os.getcwd()
+    os.chdir(tempfile.mkdtemp())  # LightningCLI writes config*.yaml into the CWD; keep them out of the repo
+    try:
+        lim = LightningInferenceModel.from_config(tmp.name, str(ckpt))
+    finally:
+        os.chdir(cwd)
     sd = torch.load(ckpt, map_location="cpu", weights_only=False)["state_dict"]
     msd = lim.model.state_dict()
     missing = [k for k in sd if k not in msd]

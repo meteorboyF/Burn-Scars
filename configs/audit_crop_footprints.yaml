@@ -1,0 +1,20 @@
+# Header-only stream audit (user-approved bandwidth 2026-10-11). Nothing stored but outputs.
+repo: ibm-nasa-geospatial/multi-temporal-crop-classification
+revision: f285bb27c8f623a0fb6a44a6fd953c3ad34007d6
+out: results/crop_audit
+archives:
+  val:
+    file: validation_chips.tgz
+    size: 1179542384
+    sha256: d6e616cc008858a1935a8937e0cdf852d574754273b0655fb696bd29aebd2fd3
+  train:
+    file: training_chips.tgz
+    size: 10601018926
+    sha256: 373cc94bfcd62fac53bbf5313813f147c708c8e799a2de711002ad0a3b6b072f
+lists:
+  train: {file: training_data.txt, sha256: 5b2ba366ac8698b7718f5cfcc521fc4f9646caf142236ca64aa6d41c463fdf90}
+  val: {file: validation_data.txt, sha256: ae370b8b5a4b01134d2755f62bddf67d8bacc1a9b3fac4ece7b8e38dc1b5a141}
+chips_csv: {file: chips_df.csv, sha256: d9a0e38bf2424ecd6bf492c976a04a2f6668cc3c59758bdae8c64ca735aeb686}
+k1_km: 5.0
+repeat_iou: 0.9
+group_km: 5.0

@@ -142,3 +142,4 @@ Disclosure: motivated by the exploratory NBR-by-distance look in E-01, made
 before any learned-model result. Commit SHA: see the next line (added in the
 following commit, since a commit cannot contain its own SHA).
 ```
+E-01 amendment and H1-v2 committed in 4b6344c (2026-10-11), before any learned-model result.

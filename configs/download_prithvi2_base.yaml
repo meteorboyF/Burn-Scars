@@ -1,0 +1,10 @@
+# Prithvi-EO-2.0-300M BASE pretrained weights (Apache-2.0). Used for the frozen-encoder
+# family. NOT the BurnScars fine-tune (that encoder saw IBM-train labels -> leakage).
+repo: ibm-nasa-geospatial/Prithvi-EO-2.0-300M
+repo_type: model
+revision: 9eb1b1102806593963daa333bcc491b1c6f8562f
+subdir: prithvi2_base
+files:
+  Prithvi_EO_V2_300M.pt:
+    size: 1326658396
+    sha256: faab2c8b776f0723f93431747603a7ec586a54fc45473613b4322c29752486e7

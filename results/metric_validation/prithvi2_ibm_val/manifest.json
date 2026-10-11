@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "tool": "validate_metric_prithvi",
+  "config_name": "validate_metric_prithvi",
+  "config_hash": "e192e86e8e814ae9b4960974cacc9b644feb17f1f954517b4ec3da8eace52559",
+  "config": {
+    "subdir": "hls_burn_scars",
+    "ckpt_subdir": "prithvi2_burnscars",
+    "out": "results/metric_validation/prithvi2_ibm_val",
+    "card_val_iou_burned": 84.28,
+    "card_val_miou": 90.95,
+    "tolerance_pts": 0.5,
+    "threads": 4
+  },
+  "dataset_hash": "c55d12b7de3b11e233fe8753ee5c584191ed87dfd905a2e9791f17712028d064",
+  "split_hash": "47c1507c72593760777de8a63081c7892b9df72bd86c1ca427a10eba2f8080eb",
+  "git_sha": "b4b910ec5af9d353e4ec18653a9719c6b3af37f6",
+  "seed": 0,
+  "smoke": false,
+  "environment": {
+    "python": "3.12.13",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "rasterio": "1.5.2",
+      "pyproj": "3.8.0",
+      "shapely": "2.2.0",
+      "matplotlib": "3.11.2",
+      "torch": "2.14.1+cpu",
+      "terratorch": "1.2.13",
+      "segmentation-models-pytorch": "0.5.0"
+    },
+    "cuda": null,
+    "gpu": null
+  },
+  "started_utc": "2026-10-11T15:35:54Z",
+  "metrics": {
+    "n_chips": 160,
+    "full_val": true,
+    "ours": {
+      "dataset_iou_burned": 0.8231562124794037,
+      "dataset_iou_unburned": 0.9719182834890273,
+      "dataset_miou": 0.8975372479842155,
+      "perchip_iou_burned": 0.7856626733468688,
+      "perchip_iou_unburned": 0.96030447598093,
+      "perchip_miou": 0.8729835746638994,
+      "n_chips": 160,
+      "n_chips_burned_defined": 160
+    },
+    "confusion": [
+      [
+        35816599,
+        714275
+      ],
+      [
+        320577,
+        4816934
+      ]
+    ],
+    "torchmetrics_macro_miou": 0.897537350654602,
+    "torchmetrics_iou_per_class": [
+      0.9719184041023254,
+      0.8231562376022339
+    ],
+    "card_val_iou_burned": 84.28,
+    "card_val_miou": 90.95,
+    "delta_iou_burned_pts": -1.9643787520596305,
+    "delta_miou_pts": -1.1962752015784446,
+    "seconds_per_chip": {
+      "mean": 9.187669211118692,
+      "median": 8.526851131999138,
+      "first": 5.912139652999031,
+      "threads": 4
+    },
+    "label": "metric+preprocessing validation only; not a training reproduction; card checkpoint was selected on this val split; CPU fp32 vs card bf16-mixed",
+    "ours_vs_torchmetrics_abs_diff": 1.0267038652589378e-07,
+    "within_tolerance": false
+  },
+  "extra": {
+    "checkpoint_sha256": "0c5f9334be9a75c9006387ab8f3dc05a55ea7fb5ef7956717316be57c62954d3",
+    "torch": "2.14.1+cpu",
+    "torch_threads": 4
+  },
+  "wall_clock_s": 1517.47,
+  "complete": true
+}

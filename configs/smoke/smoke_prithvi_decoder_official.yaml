@@ -1,0 +1,10 @@
+# CPU smoke config (plumbing only). Not a registered experiment.
+model: prithvi_decoder
+split_file: splits/v1/official.json
+fold: 0
+role: outer_test
+seed: 0
+epochs: 2
+batch_size: 2
+lr: 0.001
+ckpt_every: 2

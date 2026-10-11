@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "tool": "audit_crop_footprints",
+  "config_name": "audit_crop_footprints",
+  "config_hash": "59654fa5d7ab2726f2d2d8dfc3fcf148847924f7930d4877597473f64e12e440",
+  "config": {
+    "repo": "ibm-nasa-geospatial/multi-temporal-crop-classification",
+    "revision": "f285bb27c8f623a0fb6a44a6fd953c3ad34007d6",
+    "out": "results/crop_audit",
+    "archives": {
+      "val": {
+        "file": "validation_chips.tgz",
+        "size": 1179542384,
+        "sha256": "d6e616cc008858a1935a8937e0cdf852d574754273b0655fb696bd29aebd2fd3"
+      },
+      "train": {
+        "file": "training_chips.tgz",
+        "size": 10601018926,
+        "sha256": "373cc94bfcd62fac53bbf5313813f147c708c8e799a2de711002ad0a3b6b072f"
+      }
+    },
+    "lists": {
+      "train": {
+        "file": "training_data.txt",
+        "sha256": "5b2ba366ac8698b7718f5cfcc521fc4f9646caf142236ca64aa6d41c463fdf90"
+      },
+      "val": {
+        "file": "validation_data.txt",
+        "sha256": "ae370b8b5a4b01134d2755f62bddf67d8bacc1a9b3fac4ece7b8e38dc1b5a141"
+      }
+    },
+    "chips_csv": {
+      "file": "chips_df.csv",
+      "sha256": "d9a0e38bf2424ecd6bf492c976a04a2f6668cc3c59758bdae8c64ca735aeb686"
+    },
+    "k1_km": 5.0,
+    "repeat_iou": 0.9,
+    "group_km": 5.0
+  },
+  "dataset_hash": "483058f270d1d6113d5567816ee3a4a4a6c25a582046ece7b453b3d1fef4b7b6",
+  "split_hash": "4af64e9928635ab5af877f3e189c780631c600a5c3d8863463e52d0038188500",
+  "git_sha": "f83d233c3769e77d728bc5ed162b71995cbf5690",
+  "seed": null,
+  "smoke": false,
+  "environment": {
+    "python": "3.12.13",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "rasterio": "1.5.2",
+      "pyproj": "3.8.0",
+      "shapely": "2.2.0",
+      "matplotlib": "3.11.2"
+    },
+    "cuda": null,
+    "gpu": null
+  },
+  "started_utc": "2026-10-11T15:15:18Z",
+  "metrics": {
+    "n_chips_streamed": 3854,
+    "n_tif_files": 7708,
+    "crs": {
+      "EPSG:5070": 3854
+    },
+    "sizes_px": {
+      "224x224": 3854
+    },
+    "chip_side_m": [
+      6720.0
+    ],
+    "scene_mask_disagree": 0,
+    "chips_not_in_lists": 0,
+    "list_sizes": {
+      "train": 3083,
+      "val": 771
+    },
+    "list_ids_missing_from_archives": {
+      "train": 0,
+      "val": 0
+    },
+    "archive_vs_list_mismatch": 0,
+    "stream_check": {
+      "validation_chips.tgz": {
+        "sha256_verified": true,
+        "bytes_streamed": 1179542384
+      },
+      "training_chips.tgz": {
+        "sha256_verified": true,
+        "bytes_streamed": 10601018926
+      }
+    },
+    "n_train": 3083,
+    "n_val": 771,
+    "frac_val_within_km": {
+      "0": 0.695201037613489,
+      "1": 0.695201037613489,
+      "2.5": 0.695201037613489,
+      "5": 0.695201037613489,
+      "10": 0.8702983138780804,
+      "20": 0.9273670557717251
+    },
+    "n_val_within_km": {
+      "0": 536,
+      "1": 536,
+      "2.5": 536,
+      "5": 536,
+      "10": 671,
+      "20": 715
+    },
+    "val_nn_dist_km_quantiles": {
+      "0": 0.0,
+      "0.1": 0.0,
+      "0.25": 0.0,
+      "0.5": 0.0,
+      "0.75": 6.72,
+      "0.9": 13.44,
+      "1": 134.4
+    },
+    "n_val_overlapping_train_area": 0,
+    "n_val_touching_train_edge_or_area": 536,
+    "n_cross_repeats_iou_ge": 0,
+    "n_pool_pairs_overlapping_area": 0,
+    "tiles_train": 416,
+    "tiles_val": 253,
+    "tiles_shared": 244,
+    "tiles_total": 425,
+    "n_val_chips_on_shared_tiles": 762,
+    "groups_5km": {
+      "n_groups": 1497,
+      "n_singletons": 947,
+      "largest": 114
+    },
+    "K1_style": {
+      "p_near": 0.695201037613489,
+      "n_rep": 0,
+      "would_fire": false
+    }
+  },
+  "wall_clock_s": 2588.284,
+  "complete": true
+}

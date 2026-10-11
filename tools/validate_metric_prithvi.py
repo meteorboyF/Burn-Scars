@@ -59,13 +59,14 @@ def load_model(ckpt_dir: Path):
     return lim.model, lim.datamodule, cfg
 
 
-def predict(model, dm, x: np.ndarray) -> np.ndarray:
-    """Exactly the released inference path: test_transform -> datamodule.aug -> model -> argmax."""
+def predict(model, dm, x: np.ndarray, precision: str = "fp32") -> np.ndarray:
+    """Exactly the released inference path: test_transform -> datamodule.aug -> model -> argmax.
+    precision="bf16": CPU autocast to bfloat16, mimicking the config's bf16-mixed."""
     t = dm.test_transform(image=x.transpose(1, 2, 0))
     t["image"] = t["image"].unsqueeze(0)
     t = dm.aug(t)["image"]
-    with torch.no_grad():
-        out = model(t).output
+    with torch.no_grad(), torch.autocast("cpu", dtype=torch.bfloat16, enabled=precision == "bf16"):
+        out = model(t).output.float()
     return out.argmax(dim=1)[0].numpy().astype(np.int64)
 
 
@@ -78,6 +79,7 @@ def main(argv=None):
     C.require(ap.add_argument("--tolerance_pts", type=float))
     C.require(ap.add_argument("--threads", type=int))
     ap.add_argument("--max_chips", type=int, default=None, help="CLI only: timing runs")
+    ap.add_argument("--precision", choices=["fp32", "bf16"], default="fp32")
     args, name, cfg = C.parse(ap, argv)
     check_tier(TIER, args.smoke)
     set_seed(0)
@@ -107,7 +109,7 @@ def main(argv=None):
         with rasterio.open(root / r.mask_path) as m:
             y = m.read(1).astype(np.int64)
         t0 = time.perf_counter()
-        p = predict(model, dm, x)
+        p = predict(model, dm, x, args.precision)
         secs.append(time.perf_counter() - t0)
         np.savez_compressed(pred_dir / f"{cid}.npz", pred=p.astype(np.uint8))
         s = chip_scores(y, p)
@@ -131,6 +133,7 @@ def main(argv=None):
         "delta_miou_pts": 100 * agg["dataset_miou"] - args.card_val_miou,
         "seconds_per_chip": {"mean": float(np.mean(secs)), "median": float(np.median(secs)),
                              "first": float(secs[0]), "threads": args.threads},
+        "precision": args.precision,
         "label": "metric+preprocessing validation only; not a training reproduction; "
                  "card checkpoint was selected on this val split; CPU fp32 vs card bf16-mixed",
     }

@@ -1,0 +1,80 @@
+{
+  "n_chips_streamed": 3854,
+  "n_tif_files": 7708,
+  "crs": {
+    "EPSG:5070": 3854
+  },
+  "sizes_px": {
+    "224x224": 3854
+  },
+  "chip_side_m": [
+    6720.0
+  ],
+  "scene_mask_disagree": 0,
+  "chips_not_in_lists": 0,
+  "list_sizes": {
+    "train": 3083,
+    "val": 771
+  },
+  "list_ids_missing_from_archives": {
+    "train": 0,
+    "val": 0
+  },
+  "archive_vs_list_mismatch": 0,
+  "stream_check": {
+    "validation_chips.tgz": {
+      "sha256_verified": true,
+      "bytes_streamed": 1179542384
+    },
+    "training_chips.tgz": {
+      "sha256_verified": true,
+      "bytes_streamed": 10601018926
+    }
+  },
+  "n_train": 3083,
+  "n_val": 771,
+  "frac_val_within_km": {
+    "0": 0.695201037613489,
+    "1": 0.695201037613489,
+    "2.5": 0.695201037613489,
+    "5": 0.695201037613489,
+    "10": 0.8702983138780804,
+    "20": 0.9273670557717251
+  },
+  "n_val_within_km": {
+    "0": 536,
+    "1": 536,
+    "2.5": 536,
+    "5": 536,
+    "10": 671,
+    "20": 715
+  },
+  "val_nn_dist_km_quantiles": {
+    "0": 0.0,
+    "0.1": 0.0,
+    "0.25": 0.0,
+    "0.5": 0.0,
+    "0.75": 6.72,
+    "0.9": 13.44,
+    "1": 134.4
+  },
+  "n_val_overlapping_train_area": 0,
+  "n_val_touching_train_edge_or_area": 536,
+  "n_cross_repeats_iou_ge": 0,
+  "n_pool_pairs_overlapping_area": 0,
+  "tiles_train": 416,
+  "tiles_val": 253,
+  "tiles_shared": 244,
+  "tiles_total": 425,
+  "n_val_chips_on_shared_tiles": 762,
+  "groups_5km": {
+    "n_groups": 1497,
+    "n_singletons": 947,
+    "largest": 114
+  },
+  "K1_style": {
+    "p_near": 0.695201037613489,
+    "n_rep": 0,
+    "would_fire": false
+  }
+}

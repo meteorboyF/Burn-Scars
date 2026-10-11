@@ -24,7 +24,8 @@ class CheckpointError(RuntimeError):
     pass
 
 
-def save(ckpt_root, step: int, max_steps: int, payload: bytes, keep_last: int = 2) -> Path:
+def save(ckpt_root, step: int, max_steps: int, payload: bytes, keep_last: int = 2,
+         extra_meta: dict | None = None) -> Path:
     root = Path(ckpt_root)
     final = root / f"step_{step}"
     tmp = root / f".tmp_step_{step}"
@@ -33,7 +34,7 @@ def save(ckpt_root, step: int, max_steps: int, payload: bytes, keep_last: int = 
     tmp.mkdir(parents=True)
     (tmp / "payload.bin").write_bytes(payload)
     meta = {"step": step, "max_steps": max_steps, "payload_sha256": sha256_bytes(payload),
-            "payload_bytes": len(payload)}
+            "payload_bytes": len(payload), **(extra_meta or {})}
     (tmp / "meta.json").write_text(json.dumps(meta))
     if final.exists():
         shutil.rmtree(final)

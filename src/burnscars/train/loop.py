@@ -10,6 +10,7 @@ Model selection never touches the held-out set of an outer fold: role
 "outer_test" evaluates ONCE, after the last step; per-epoch evaluation is only
 allowed for role "inner_val" (hyper-parameter tuning).
 """
+import hashlib
 import io
 import json
 import math
@@ -46,6 +47,15 @@ def _state_bytes(model, opt, sched, step, history, ep_loss) -> bytes:
     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(),
                 "step": step, "history": history, "ep_loss": ep_loss}, buf)
     return buf.getvalue()
+
+
+def model_hash(model) -> str:
+    """SHA256 over model tensors only (deterministic content; payload bytes include wall-clock)."""
+    h = hashlib.sha256()
+    for k, v in sorted(model.state_dict().items()):
+        h.update(k.encode())
+        h.update(v.detach().cpu().contiguous().numpy().tobytes())
+    return h.hexdigest()
 
 
 def evaluate(model, items, load_xy, device, batch_size=4):
@@ -92,7 +102,7 @@ def train(model, train_ids, eval_ids, load_xy, *, seed, epochs, batch_size, lr, 
         opt.load_state_dict(st["opt"])
         sched.load_state_dict(st["sched"])
         step, history, ep_loss = st["step"], st["history"], st["ep_loss"]
-        log(f"resumed from step {step}/{max_steps}")
+        log(f"resumed from step {step}/{max_steps} model_sha256={model_hash(model)[:12]}")
 
     t0 = time.time()
     while step < max_steps:
@@ -112,7 +122,8 @@ def train(model, train_ids, eval_ids, load_xy, *, seed, epochs, batch_size, lr, 
             step += 1
             ep_loss.append(float(loss.detach()))
             if step % ckpt_every == 0 and step % steps_per_epoch != 0:  # epoch ends saved below
-                ck.save(ckpt_dir, step, max_steps, _state_bytes(model, opt, sched, step, history, ep_loss))
+                ck.save(ckpt_dir, step, max_steps, _state_bytes(model, opt, sched, step, history, ep_loss),
+                        extra_meta={"model_sha256": model_hash(model)})
             if kill_after_step is not None and step >= kill_after_step:
                 raise KeyboardInterrupt(f"simulated kill at step {step}")
         rec = {"epoch": epoch, "step": step, "train_loss": float(np.mean(ep_loss)) if ep_loss else None,
@@ -122,7 +133,8 @@ def train(model, train_ids, eval_ids, load_xy, *, seed, epochs, batch_size, lr, 
             rec |= {"val_dataset_iou_burned": agg["dataset_iou_burned"], "val_dataset_miou": agg["dataset_miou"]}
         history.append(rec)
         log(json.dumps(rec))
-        ck.save(ckpt_dir, step, max_steps, _state_bytes(model, opt, sched, step, history, ep_loss))
+        ck.save(ckpt_dir, step, max_steps, _state_bytes(model, opt, sched, step, history, ep_loss),
+                        extra_meta={"model_sha256": model_hash(model)})
 
     final, rows, preds = evaluate(model, eval_ids, load_xy, device)
     return {"history": history, "final_eval": final, "per_chip": rows, "preds": preds,

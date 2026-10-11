@@ -1,7 +1,9 @@
 # STATE: single source of truth (update every session)
 
-Last updated: 2026-10-11 (session 1)
-Current phase: **Phase A complete → waiting at STOP POINT A** for the user's go-ahead to Phase B.
+Last updated: 2026-10-11 (session 1, end of Phase B)
+Current phase: **Phase B complete → waiting at STOP POINT B (K1 gate)**. K1 did
+NOT fire. Phase C must not start until the user confirms the gate and decides
+D-014 (CV pool) and the E-01 amendment.
 
 ## Topic statement (FROZEN 2026-10-11; changes need a DECISIONS entry)
 
@@ -41,22 +43,32 @@ Current phase: **Phase A complete → waiting at STOP POINT A** for the user's g
 
 | Item | Status |
 |---|---|
-| Skeleton (07_BOOTSTRAP_PROMPT.md) | done, 45 tests pass on CPU |
-| Pre-commit hook | live (`core.hooksPath=.githooks`), fires on forbidden commit |
-| H1 / K1 / K2 pre-registration | REGISTERED 2026-10-11, before any data download |
-| Literature protocol | not started (Phase B, live web search) |
-| Data licence / download / profile | not started (Phase B) |
-| Footprint audit / K1 gate | not started (Phase B) |
+| Skeleton + hook | done; 89 tests pass on CPU (test_splits ~3 min) |
+| H1 / K1 / K2 | REGISTERED 2026-10-11 before download. **K1: does NOT fire** (40.5% within 5 km; 6 repeats) |
+| Data | HLS Burn Scars @1864285 downloaded, SHA256 verified; profiled (docs/DATA.md) |
+| Footprint audit | docs/AUDIT_REPORT.md (generated), results/audit/ |
+| TACO 124/365 claim | reproduced exactly |
+| Metric replica | `burnscars.eval.metrics`, 8 hand-computed tests pass; NOT yet validated against a published number (needs model predictions) |
+| NBR / all-unburned controls | results/baselines/nbr_v1/; NBR random-vs-grouped gap ≈ 0 |
+| Splits | splits/v1 (official, IBM train/val, random+grouped 5-fold on pools 804 and 684), pinned |
+| IBM test quarantine | enforced in code + test; reads logged in docs/QUARANTINE_LOG.md |
+| Literature | docs/LITERATURE.md; verdict CROWDED → rescoped; refs.bib 39 entries |
+| Crop dataset | georeferenced (EPSG:5070); NOT downloaded |
 | Compute spent | 0 GPU-h, 0 CU (VERIFIED) |
 
-## Next steps (Phase B, CPU only, after user go-ahead)
+## Open decisions for the user (STOP B)
 
-1. Read licence at the pinned HF revision → DATA.md; then scripted download + SHA256.
-2. Literature protocol with live search (verify every number in the topic statement).
-3. Profile → footprint audit → K1 gate numbers.
-4. Metric replica + tests; NBR / all-unburned controls under both splits.
-5. Split builders + IBM test quarantine (`--final` gate).
-6. STOP POINT B report incl. 06_CHECKLISTS.md Phase 0 gate item by item.
+1. Confirm the K1 gate → Phase C.
+2. D-014: CV pool 804 (as briefed) or 684 (keeps IBM test a clean holdout; recommended).
+3. E-01: approve adding NBR per-chip IoU as a difficulty covariate in H1(c)/K2.
+4. H1 prediction band (agent-proposed, Phase A) — confirm or amend.
+5. Venue/template (D-005); repo visibility vs double-blind (D-006).
+
+## Next steps (Phase C, after confirmation; code + CPU smoke only)
+
+UNet (from scratch) and Prithvi-EO-2.0-300M frozen-encoder + light decoder
+(licences first); stats module; --smoke trainers with kill/resume test; Colab
+runner; grid costing; then request a specific pilot allocation (STOP C).
 
 ## How to resume in a fresh session
 

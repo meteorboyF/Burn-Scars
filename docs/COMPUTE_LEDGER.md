@@ -24,4 +24,7 @@ throughput + model FLOPs, then by the measured pilot.
 | Date | Allocation | Config | Machine | Wall clock | GPU-h | CU | What it bought |
 |---|---|---|---|---|---|---|---|
 
+Phase B CPU work (laptop, 2026-10-11): profile 2 min, audit 2 min, splits 1.5 min,
+NBR baselines 5 min. Not accelerator time; listed for completeness.
+
 Spent to date: 0 GPU-h, 0 CU (VERIFIED, 2026-10-11).

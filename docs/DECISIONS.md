@@ -64,5 +64,47 @@ with operational definitions (edge-to-edge footprint distance, IoU ≥ 0.9 for
 "same footprint", dataset-level burned IoU for K2). Earlier than Phase B
 requires; strictly safer for pre-registration.
 
-**D-009 (PENDING, Phase B) Distance CRS** — EPSG:5070 vs geodesic. To be
-decided with the actual chip extents (does any chip fall outside CONUS?).
+**D-009 (2026-10-11) Distance CRS = EPSG:5070 (CONUS Albers equal-area), with a
+geodesic cross-check.** All 804 chips lie in CONUS (UTM 10–18), inside EPSG:5070's
+area of use. Albers preserves area (needed for overlap fractions), and its
+distance distortion across CONUS is ~1–2% (≤100 m at 5 km), negligible against a
+5 km threshold. Verified: overlap IoU from native UTM bounds vs EPSG:5070 agrees
+to 8e-7 on 276 same-zone pairs; p_near at 5 km is identical (40.5%) under the
+geodesic re-measurement of each nearest pair. Footprints are densified (16
+points/edge) before reprojection.
+
+**D-010 (2026-10-11) Libraries.** No new library was added in Phase B: the
+downloader uses `urllib` (stdlib) against pinned HF `resolve/<sha>` URLs, so
+`huggingface_hub` is not needed.
+
+**D-011 (2026-10-11) Metric protocol.** Primary: burned-class IoU and 2-class
+macro mIoU from a confusion matrix pooled over all held-out pixels, −1 ignored —
+the convention PANGAEA and TerraTorch use (docs/LITERATURE.md). Per-chip IoU
+(mean over chips, NaN-excluded) is reported as a separate, labelled metric and
+is the response variable of the H1 distance regression. Burned-class IoU is the
+pre-registered primary effect metric (mIoU is diluted by unburned IoU ≈ 96–98).
+
+**D-012 (2026-10-11) "Random" CV = stratified random 5-fold** (chips sorted by
+burned fraction, each block of 5 shuffled across folds), because the grouped
+regime is balanced on count and burned fraction; this makes the two regimes
+differ only in spatial structure. Train sizes equalised by seeded subsampling to
+the minimum over both regimes and all folds (643 for 804 chips, 547 for 684).
+Inner folds: 4 per outer fold, same regime logic. Seed 20261011.
+
+**D-013 (2026-10-11) Split release v1** in `splits/v1/`, hashes pinned in
+`tests/test_splits.py`; regenerable byte-identically from committed
+`results/profile/chips_profile.csv` + IBM train/val lists. A change is v2, never
+an edit.
+
+**D-014 (OPEN — user decision at STOP B) CV pool: all 804 vs IBM train+val 684.**
+The brief says "5-fold CV over the pooled 804" AND "IBM's 120-chip test set is
+quarantined". Using 804 puts the IBM test chips into CV training and
+hyper-parameter tuning, so a later `--final` evaluation on IBM test would no
+longer be a clean holdout for our tuned configs. Both pools are built (v1).
+Recommendation: CV on **684 (IBM train ∪ val)**, keep IBM test as a
+true holdout for one final cross-check against the published IBM-split numbers.
+Cost: ~15% fewer chips per fold (train 547 vs 643).
+
+**D-015 (2026-10-11) Dirty-tree definition.** A manifest's git SHA is `-dirty` if
+tracked files differ OR untracked files exist under src/, tools/, configs/,
+scripts/ (found after one smoke run recorded a clean SHA for uncommitted code).

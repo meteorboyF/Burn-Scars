@@ -30,7 +30,10 @@ Robustness: also report p_near at 2.5 and 10 km and under geodesic distance;
   if the verdict flips between EPSG:5070 and geodesic, report it as borderline
   and let the user decide (no silent choice).
 Cost: CPU only, minutes.
-Outcome:
+Outcome (2026-10-11, results/audit/manifest.json @ clean SHA b4e42c7): K1 does
+  NOT fire. p_near = 107/264 = 40.5% (geodesic 40.5%; 36.0% at 2.5 km, 48.1% at
+  10 km) vs threshold 5.0%; n_rep = 6 (all same tile, different year) vs 0.
+  Both conditions fail by a wide margin; not borderline. Topic continues.
 ```
 
 ```
@@ -70,4 +73,22 @@ Fires (topic stops) if: |gap| < 1.0 IoU point AND the two fold intervals
   overlap AND the distance-slope 95% CI includes 0.
 Cost: inside the pilot allocation; no extra runs.
 Outcome:
+```
+
+---
+
+```
+E-01  2026-10-11  status: EXPLORATORY (not pre-registered; seen before any model)
+Observation: NBR-rule per-chip burned IoU on the official val split, by distance
+  to nearest official-train chip: overlapping 0.234 (n=85), 0-5 km 0.575 (n=22),
+  5-20 km 0.433 (n=55), >20 km 0.361 (n=102). NBR cannot memorise places, so
+  chip DIFFICULTY covaries with distance-to-train in this dataset.
+Consequence: the H1 per-chip regression with only burned_fraction + year as
+  controls may mis-attribute a difficulty gradient to leakage (in either
+  direction). PROPOSED amendment (needs user approval BEFORE any learned-model
+  result exists): add the NBR-rule per-chip IoU (a model-free difficulty score)
+  as a covariate, and test the learned-minus-NBR per-chip IoU difference against
+  distance. Flagged as informed by this look, so it is a disclosed amendment.
+Also: NBR random-vs-grouped CV gap = +0.08 pts (pool 804) and -0.11 pts
+  (pool 684) dataset-level burned IoU, fold SD ~4-5 pts: the control is flat.
 ```

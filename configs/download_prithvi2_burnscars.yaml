@@ -1,0 +1,12 @@
+# Published fine-tuned checkpoint (Apache-2.0) for METRIC/PREPROCESSING validation only.
+repo: ibm-nasa-geospatial/Prithvi-EO-2.0-300M-BurnScars
+repo_type: model
+revision: a3f2c410e45b8ac7417976614528a872f024d831
+subdir: prithvi2_burnscars
+files:
+  Prithvi_EO_V2_300M_BurnScars.pt:
+    size: 1297798380
+    sha256: 0c5f9334be9a75c9006387ab8f3dc05a55ea7fb5ef7956717316be57c62954d3
+  burn_scars_config.yaml:
+    size: 2504
+    sha256: 9b40e6d8c6369b863d29fb1d69b6185aa366f8ee4c2de955bbad28d3ee32f466

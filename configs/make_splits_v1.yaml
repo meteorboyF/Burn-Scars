@@ -1,0 +1,9 @@
+# Leakage-safe split release v1. Pools: all804 (as briefed) and ibm_trainval (684,
+# keeps IBM test a true holdout). Which pool the CV study uses is a user decision (STOP B).
+version: v1
+profile_csv: results/profile/chips_profile.csv
+pools: [all804, ibm_trainval]
+k: 5
+k_inner: 4
+group_km: 5.0
+seed: 20261011

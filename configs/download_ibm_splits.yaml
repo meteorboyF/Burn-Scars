@@ -1,0 +1,17 @@
+# IBM non-overlapping splits shipped with the Prithvi-EO-2.0-300M-BurnScars model repo
+# (Apache-2.0), pinned to a3f2c41 (2025-09-29). test.txt is QUARANTINED (see
+# burnscars.data.splits): only tools/final_eval.py --final may read it.
+repo: ibm-nasa-geospatial/Prithvi-EO-2.0-300M-BurnScars
+repo_type: model
+revision: a3f2c410e45b8ac7417976614528a872f024d831
+subdir: ibm_splits
+files:
+  splits/train.txt:
+    size: 9432
+    sha256: f1dca5c488c7a7451f3aa82f20677c18b3b22a2d96b59d68215494e3dba6f393
+  splits/val.txt:
+    size: 2880
+    sha256: 50a98be7974a2fec73af62b5f54063d938bcfe93cd9802b90eb33eb78f4d7f3e
+  splits/test.txt:
+    size: 2160
+    sha256: c61ddcb5a434da3f5e63edd7c87549af104c6cc69345876a8ed770844bab1788

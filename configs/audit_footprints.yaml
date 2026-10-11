@@ -1,0 +1,7 @@
+# Pre-registered K1 operationalisation (docs/REALITY_CHECK.md, 2026-10-11).
+subdir: hls_burn_scars
+out: results/audit
+k1_km: 5.0
+k1_frac: 0.05
+repeat_iou: 0.9
+group_km: 5.0

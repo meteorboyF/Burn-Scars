@@ -1,0 +1,12 @@
+# HLS Burn Scars, pinned to HEAD 1864285 (2023-09-26). Licence CC-BY-4.0 (card YAML at
+# this revision). The tarball LFS object is identical at 80ca8df, 6274300, 24aa452, 1864285.
+repo: ibm-nasa-geospatial/hls_burn_scars
+repo_type: dataset
+revision: 1864285e25010d346a842e4f068b1a1d4248ed6d
+subdir: hls_burn_scars
+files:
+  hls_burn_scars.tar.gz:
+    size: 2645552531
+    sha256: 4e6f99a75cb2c500547b20662a15cbd531dc421376f815e91846ea542798e8e6
+extract:
+  - hls_burn_scars.tar.gz

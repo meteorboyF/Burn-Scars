@@ -96,7 +96,7 @@ Inner folds: 4 per outer fold, same regime logic. Seed 20261011.
 `results/profile/chips_profile.csv` + IBM train/val lists. A change is v2, never
 an edit.
 
-**D-014 (OPEN — user decision at STOP B) CV pool: all 804 vs IBM train+val 684.**
+**D-014 (DECIDED 2026-10-11 by user: 684 pool) CV pool: all 804 vs IBM train+val 684.**
 The brief says "5-fold CV over the pooled 804" AND "IBM's 120-chip test set is
 quarantined". Using 804 puts the IBM test chips into CV training and
 hyper-parameter tuning, so a later `--final` evaluation on IBM test would no
@@ -108,3 +108,14 @@ Cost: ~15% fewer chips per fold (train 547 vs 643).
 **D-015 (2026-10-11) Dirty-tree definition.** A manifest's git SHA is `-dirty` if
 tracked files differ OR untracked files exist under src/, tools/, configs/,
 scripts/ (found after one smoke run recorded a clean SHA for uncommitted code).
+
+**D-014 resolution (2026-10-11, user).** Matched CV uses the 684 pool. Added
+arm: "as-published" = train official train, evaluate official val. Hard rule,
+code-enforced (`burnscars.data.splits.assert_eval_allowed`, tested): a model
+trained on the official split is never evaluated on IBM test, because all 120
+IBM-test chips lie inside official train/val.
+
+**D-016 (2026-10-11, user) Metric separation.** Headline gaps and rankings use
+pooled (dataset-level) burned IoU only (PANGAEA convention). Per-chip IoU is
+used only as the response in the distance regressions R0/R1/R2. The two are
+never mixed in one comparison.

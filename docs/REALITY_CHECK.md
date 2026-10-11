@@ -92,3 +92,53 @@ Consequence: the H1 per-chip regression with only burned_fraction + year as
 Also: NBR random-vs-grouped CV gap = +0.08 pts (pool 804) and -0.11 pts
   (pool 684) dataset-level burned IoU, fold SD ~4-5 pts: the control is flat.
 ```
+
+---
+
+```
+H1-v2  2026-10-11  status: REGISTERED (supersedes H1's prediction/decision rule;
+  user-approved; committed BEFORE any learned-model result of ours exists —
+  the only model output seen so far is none; the published-checkpoint metric
+  validation on IBM val runs AFTER this commit)
+Pool: 684 chips (IBM train ∪ IBM val), splits/v1/{random,grouped}_cv5_ibm_trainval.json
+  (D-014). IBM test stays quarantined.
+Arms: (A) random 5-fold CV, (B) grouped 5-fold CV (5 km single linkage), equal
+  train size 547; (C) "as-published": train on official train (540), evaluate on
+  official val (264) — the community protocol whose inflation we quantify.
+  Models trained on official train are NEVER evaluated on IBM test (code-enforced).
+Smallest effect of interest: +2.0 burned-IoU points.
+Headline gap G = pooled burned IoU(random) - pooled burned IoU(grouped), where
+  each regime's pooled IoU is computed from the confusion matrix summed over all
+  684 out-of-fold chips (each chip is tested exactly once per regime -> paired).
+CI: cluster bootstrap resampling the 5-km connected components (groups of the
+  684 pool, splits/v1 group_of) with replacement, B = 10,000, recomputing both
+  pooled IoUs in every resample; 95% percentile interval.
+H1 SUPPORTED only if ALL: G >= 2.0; CI(G) excludes 0; CI(G_learned - G_NBR)
+  excludes 0 (same bootstrap draws, paired).
+Rank criterion: predicted ranking (pre-registered here):
+  random regime : UNet >= Prithvi-EO-2.0-300M frozen + light decoder
+  grouped regime: Prithvi-EO-2.0-300M frozen + light decoder > UNet
+  (mechanism: memorisation of place helps the from-scratch model more).
+  Report P_boot(reversal) = fraction of bootstrap resamples in which the order
+  of pooled burned IoU differs between regimes. A reversal COUNTS only if
+  P_boot >= 0.9.
+Metric separation: pooled IoU for all headline gaps; per-chip IoU ONLY for the
+  distance regressions (D-016).
+Distance regressions (per-chip, out-of-fold, cluster bootstrap over 5-km
+  components), all three reported, none dropped:
+  R0 (original pre-registered): IoU_learned ~ log1p(dist_km) + burned_frac + year
+  R1 (primary, E-01 amendment): IoU_learned ~ log1p(dist_km) + burned_frac + year + IoU_NBR
+  R2 (robustness, diff-in-diff): (IoU_learned - IoU_NBR) ~ log1p(dist_km) + burned_frac + year
+  dist_km = distance to nearest chip in that chip's own training fold.
+Falsified if: G < 2.0, or CI(G) includes 0, or CI(G_learned - G_NBR) includes 0.
+Abandon if: K2 fires.
+```
+
+```
+E-01 AMENDMENT  2026-10-11  status: APPROVED by user (disclosed amendment)
+The NBR per-chip IoU covariate (E-01) enters H1 as regression R1 (primary) and
+the difference outcome R2 (robustness); R0 (original spec) is still reported.
+Disclosure: motivated by the exploratory NBR-by-distance look in E-01, made
+before any learned-model result. Commit SHA: see the next line (added in the
+following commit, since a commit cannot contain its own SHA).
+```

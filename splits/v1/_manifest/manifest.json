@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "tool": "make_splits",
+  "config_name": "make_splits_v1",
+  "config_hash": "4047a307ea93f50c102a0580801e7c2d6c7f1a07b3ac6c5a2862996370fad5b2",
+  "config": {
+    "version": "v1",
+    "profile_csv": "results/profile/chips_profile.csv",
+    "pools": [
+      "all804",
+      "ibm_trainval"
+    ],
+    "k": 5,
+    "k_inner": 4,
+    "group_km": 5.0,
+    "seed": 20261011
+  },
+  "dataset_hash": null,
+  "split_hash": "20df4e2e00a08d028af5bcdcd6e833188064435ce0aa3f874c46c0ea84ab83f0",
+  "git_sha": "556243b98a121066242ee021545db814e2adde59",
+  "seed": 20261011,
+  "smoke": false,
+  "environment": {
+    "python": "3.12.13",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "numpy": "2.5.4",
+      "pandas": "3.0.6",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "rasterio": "1.5.2",
+      "pyproj": "3.8.0",
+      "shapely": "2.2.0",
+      "matplotlib": "3.11.2"
+    },
+    "cuda": null,
+    "gpu": null
+  },
+  "started_utc": "2026-10-11T06:14:13Z",
+  "metrics": {
+    "sha256": {
+      "official.json": "0e08ca16e4f4cf126c3270481c640d5f95d7b898834183712233b140e3982695",
+      "ibm_trainval.json": "0e675124b9d81bb51f67be30f7e2562f901e9c8b9521b230a72a2b15caafa346",
+      "random_cv5_all804.json": "0dd2d0f907090703140a8f1715171754138a65bd393d20737e7dfd7054538373",
+      "grouped_cv5_all804.json": "ec7df7dadca093ae64183348109bc2c2b7e7b82f9fc5b2960430185b38aec878",
+      "random_cv5_ibm_trainval.json": "b193ac1e372dac2345defbad602444a1bf00a0756e616499f59ed948ec7906d1",
+      "grouped_cv5_ibm_trainval.json": "57b75d6b1a0a8af8f9e94106fbeea1696418c5ad7a9af5c6711a33305e1550dc"
+    },
+    "stats": {
+      "random_cv5_all804.json": {
+        "test_sizes": [
+          161,
+          160,
+          161,
+          161,
+          161
+        ],
+        "train_size": 643,
+        "test_burned_frac_mean": [
+          0.1116,
+          0.1076,
+          0.1119,
+          0.1112,
+          0.1119
+        ],
+        "n_groups": 552
+      },
+      "grouped_cv5_all804.json": {
+        "test_sizes": [
+          161,
+          161,
+          161,
+          161,
+          160
+        ],
+        "train_size": 643,
+        "test_burned_frac_mean": [
+          0.1108,
+          0.1108,
+          0.1108,
+          0.1108,
+          0.1108
+        ],
+        "n_groups": 552
+      },
+      "random_cv5_ibm_trainval.json": {
+        "test_sizes": [
+          137,
+          137,
+          137,
+          136,
+          137
+        ],
+        "train_size": 547,
+        "test_burned_frac_mean": [
+          0.1141,
+          0.1127,
+          0.1128,
+          0.1078,
+          0.1131
+        ],
+        "n_groups": 470
+      },
+      "grouped_cv5_ibm_trainval.json": {
+        "test_sizes": [
+          136,
+          137,
+          137,
+          137,
+          137
+        ],
+        "train_size": 547,
+        "test_burned_frac_mean": [
+          0.1121,
+          0.1121,
+          0.1121,
+          0.1121,
+          0.1121
+        ],
+        "n_groups": 470
+      }
+    }
+  },
+  "wall_clock_s": 81.412,
+  "complete": true
+}

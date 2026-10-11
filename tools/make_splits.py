@@ -83,12 +83,15 @@ def main(argv=None):
     C.require(ap.add_argument("--k_inner", type=int))
     C.require(ap.add_argument("--group_km", type=float))
     C.require(ap.add_argument("--seed", type=int))
+    ap.add_argument("--out_dir", default=None, help="CLI only: write elsewhere (regeneration tests)")
     args, name, cfg = C.parse(ap, argv)
     check_tier(TIER, args.smoke)
     rec = RunRecorder("make_splits", name, cfg, seed=args.seed, smoke=args.smoke)
 
     prof = pd.read_csv(REPO_ROOT / args.profile_csv).sort_values("chip_id").reset_index(drop=True)
     out_dir = REPO_ROOT / "splits" / args.version if not args.smoke else REPO_ROOT / "outputs" / "smoke" / name
+    if args.out_dir:
+        out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     common = {"version": args.version, "seed": args.seed, "dataset": "ibm-nasa-geospatial/hls_burn_scars@1864285"}
     sums = {}

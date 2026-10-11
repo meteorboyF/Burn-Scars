@@ -53,3 +53,17 @@ def test_requirements_are_pinned():
         line = line.split("#")[0].strip()
         if line:
             assert "==" in line, f"unpinned requirement: {line}"
+
+
+@needs_git
+def test_git_sha_flags_untracked_code(tmp_path):
+    from burnscars.manifest import git_sha
+
+    def g(*a):
+        subprocess.run(["git", *a], cwd=tmp_path, capture_output=True, check=True)
+    g("init", "-q")
+    g("-c", "user.email=t@e", "-c", "user.name=t", "commit", "-q", "--allow-empty", "-m", "x")
+    assert not git_sha(tmp_path).endswith("-dirty")
+    (tmp_path / "tools").mkdir()
+    (tmp_path / "tools" / "new.py").write_text("x=1\n")
+    assert git_sha(tmp_path).endswith("-dirty")

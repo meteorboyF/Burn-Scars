@@ -48,16 +48,22 @@ def sha256_json(obj) -> str:
     return sha256_bytes(json.dumps(obj, sort_keys=True, separators=(",", ":")).encode())
 
 
+CODE_DIRS = ("src", "tools", "configs", "scripts")
+
+
 def git_sha(repo=REPO_ROOT) -> str:
-    """HEAD SHA, suffixed with -dirty if tracked files differ. 'nogit' outside a repo."""
+    """HEAD SHA, suffixed with -dirty if tracked files differ OR untracked files exist
+    under the code dirs (code that ran but is not in the commit). 'nogit' outside a repo."""
     try:
         sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
                              text=True, check=True).stdout.strip()
-        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"],
-                               cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
+        tracked = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"],
+                                 cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
+        untracked = subprocess.run(["git", "ls-files", "--others", "--exclude-standard", "--", *CODE_DIRS],
+                                   cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
         return "nogit"
-    return sha + ("-dirty" if dirty else "")
+    return sha + ("-dirty" if tracked or untracked else "")
 
 
 def environment() -> dict:

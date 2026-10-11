@@ -43,7 +43,7 @@ D-014 (CV pool) and the E-01 amendment.
 
 | Item | Status |
 |---|---|
-| Skeleton + hook | done; 89 tests pass on CPU (test_splits ~3 min) |
+| Skeleton + hook | done; 88 tests pass on CPU (test_splits ~3 min) |
 | H1 / K1 / K2 | REGISTERED 2026-10-11 before download. **K1: does NOT fire** (40.5% within 5 km; 6 repeats) |
 | Data | HLS Burn Scars @1864285 downloaded, SHA256 verified; profiled (docs/DATA.md) |
 | Footprint audit | docs/AUDIT_REPORT.md (generated), results/audit/ |

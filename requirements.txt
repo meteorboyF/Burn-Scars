@@ -1,0 +1,12 @@
+# Direct, CPU-only dependencies (Python 3.12). Licences in docs/DECISIONS.md D-004.
+# Full transitive lock: requirements.lock (uv pip freeze).
+rasterio==1.5.2
+pyproj==3.8.0
+shapely==2.2.0
+numpy==2.5.4
+pandas==3.0.6
+scipy==1.18.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+pyyaml==6.0.3
+pytest==9.1.1

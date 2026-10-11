@@ -1,0 +1,18 @@
+[project]
+name = "burnscars"
+version = "0.0.1"
+description = "Split leakage audit and matched random-vs-grouped CV on HLS Burn Scars"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

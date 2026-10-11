@@ -1,0 +1,31 @@
+# Data lives OUTSIDE git. Root-anchored on purpose: an unanchored `data/`
+# would also ignore src/burnscars/data/ (guarded by tests/test_repo_hygiene.py).
+/data/
+/outputs/
+/runs/
+/checkpoints/
+
+# Python / tooling
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+.ipynb_checkpoints/
+
+# LaTeX build products (figures/*.pdf ARE tracked)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+paper/*.bbl
+paper/*.blg
+paper/main.pdf
+
+# Secrets
+.env
+*.pem
+*.key
+kaggle.json

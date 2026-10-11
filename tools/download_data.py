@@ -8,6 +8,7 @@ to extract unless size and SHA256 match the config.
 """
 import sys
 import tarfile
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -26,22 +27,33 @@ def url_for(repo_type, repo, revision, filename):
     return f"https://huggingface.co/{prefix}{repo}/resolve/{revision}/{filename}"
 
 
-def fetch(url, dest: Path, expected_size: int, chunk=1 << 22):
+def fetch(url, dest: Path, expected_size: int, chunk=1 << 22, retries=20):
+    """Resumable download. The file is renamed to `dest` ONLY when complete."""
     part = dest.with_suffix(dest.suffix + ".part")
-    have = part.stat().st_size if part.exists() else 0
-    if dest.exists() and dest.stat().st_size == expected_size:
-        print(f"already downloaded: {dest}")
-        return
-    req = urllib.request.Request(url, headers={"Range": f"bytes={have}-"} if have else {})
-    with urllib.request.urlopen(req) as r, open(part, "ab" if have else "wb") as f:
-        if have and r.status != 206:
-            raise RuntimeError("server ignored Range; delete the .part file and retry")
-        done = have
-        while block := r.read(chunk):
-            f.write(block)
-            done += len(block)
-            if done // (1 << 28) != (done - len(block)) // (1 << 28):
-                print(f"  {done / 1e9:.2f} / {expected_size / 1e9:.2f} GB", flush=True)
+    if dest.exists():
+        if dest.stat().st_size == expected_size:
+            print(f"already downloaded: {dest}")
+            return
+        dest.rename(part)  # incomplete file from an older run: resume it
+    for attempt in range(retries):
+        have = part.stat().st_size if part.exists() else 0
+        if have == expected_size:
+            break
+        req = urllib.request.Request(url, headers={"Range": f"bytes={have}-"} if have else {})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r, open(part, "ab" if have else "wb") as f:
+                if have and r.status != 206:
+                    raise RuntimeError("server ignored Range; delete the .part file and retry")
+                done = have
+                while block := r.read(chunk):
+                    f.write(block)
+                    done += len(block)
+                    if done // (1 << 28) != (done - len(block)) // (1 << 28):
+                        print(f"  {done / 1e9:.2f} / {expected_size / 1e9:.2f} GB", flush=True)
+        except (OSError, urllib.error.URLError) as e:
+            print(f"  connection error ({e}); resuming (attempt {attempt + 1}/{retries})", flush=True)
+    if not part.exists() or part.stat().st_size != expected_size:
+        raise SystemExit(f"incomplete download after {retries} attempts: {part}")
     part.rename(dest)
 
 

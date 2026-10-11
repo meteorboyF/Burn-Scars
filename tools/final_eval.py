@@ -12,7 +12,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from burnscars import config as C  # noqa: E402
-from burnscars.data.splits import ibm_test_ids  # noqa: E402
+from burnscars.data.splits import assert_eval_allowed, ibm_test_ids  # noqa: E402
+from burnscars.manifest import load_manifest  # noqa: E402
 from burnscars.hardware import check_tier  # noqa: E402
 
 TIER = "gpu"
@@ -22,13 +23,18 @@ def main(argv=None):
     ap = C.base_parser(__doc__.splitlines()[0])
     ap.add_argument("--final", action="store_true", help="required: confirms a final test evaluation")
     C.require(ap.add_argument("--purpose"))
+    C.require(ap.add_argument("--train_manifest", help="manifest of the model's training run"))
     args, name, cfg = C.parse(ap, argv)
     if not args.final:
         raise SystemExit("REFUSED: final_eval reads the quarantined IBM test split; pass --final")
     if args.smoke:
         raise SystemExit("REFUSED: no smoke mode on the quarantined test split")
+    train = load_manifest(args.train_manifest, require_clean=True)
+    train_split, train_ids = train["extra"]["train_split"], train["extra"]["train_ids"]
+    assert_eval_allowed(train_split, train_ids, "ibm_test", [])  # name rule, before reading test
     check_tier(TIER, args.smoke)
     ids = ibm_test_ids("final_eval", f"{name}: {args.purpose}")
+    assert_eval_allowed(train_split, train_ids, "ibm_test", ids)
     raise NotImplementedError(f"model evaluation lands in Phase C ({len(ids)} test ids loaded)")
 
 

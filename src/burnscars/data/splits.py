@@ -55,3 +55,27 @@ def ibm_test_ids(caller: str, purpose: str) -> list[str]:
     with open(QUARANTINE_LOG, "a") as f:
         f.write(line)
     return ids
+
+
+class EvalLeakError(PermissionError):
+    pass
+
+
+# Training-split families that may ever be scored on IBM test. Official-split
+# models are excluded by rule: all 120 IBM-test chips lie inside official train/val.
+_IBM_TEST_ELIGIBLE = {"ibm", "cv_random_684", "cv_grouped_684"}
+
+
+def assert_eval_allowed(train_split: str, train_ids, eval_name: str, eval_ids) -> None:
+    """Refuse an evaluation that would leak. Called by every evaluation entrypoint.
+
+    1. name rule: eval on "ibm_test" only for models whose train_split family is
+       in _IBM_TEST_ELIGIBLE (never "official").
+    2. set rule: training chips and evaluation chips must be disjoint, always.
+    """
+    if eval_name == "ibm_test" and train_split not in _IBM_TEST_ELIGIBLE:
+        raise EvalLeakError(f"model trained on {train_split!r} may never be evaluated on IBM test")
+    overlap = set(train_ids) & set(eval_ids)
+    if overlap:
+        raise EvalLeakError(f"{len(overlap)} training chips are in the evaluation set {eval_name!r}, "
+                            f"e.g. {sorted(overlap)[:3]}")

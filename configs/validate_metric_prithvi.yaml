@@ -1,0 +1,8 @@
+# Metric/preprocessing validation on IBM VAL with the published checkpoint (CPU only).
+subdir: hls_burn_scars
+ckpt_subdir: prithvi2_burnscars
+out: results/metric_validation/prithvi2_ibm_val
+card_val_iou_burned: 84.28
+card_val_miou: 90.95
+tolerance_pts: 0.5
+threads: 4

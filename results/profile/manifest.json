@@ -9,7 +9,7 @@
   },
   "dataset_hash": "8c35b4e8c521107a89af99788a4f3829d449fbb43b69acbb98f2717e177d6f67",
   "split_hash": null,
-  "git_sha": "bfecbcc1fb2b8536ea1dedb789dccfca18ff81b4",
+  "git_sha": "758b22e438040a0fed51d0ea588ecad734ca7356",
   "seed": null,
   "smoke": false,
   "environment": {
@@ -29,7 +29,7 @@
     "cuda": null,
     "gpu": null
   },
-  "started_utc": "2026-10-11T06:01:21Z",
+  "started_utc": "2026-10-11T06:04:03Z",
   "metrics": {
     "n_chips": 804,
     "n_by_official_split": {
@@ -182,6 +182,6 @@
     "px_scene_eq_nodata_hdr": 1745273,
     "px_ignore_and_nodata_hdr": 1334912
   },
-  "wall_clock_s": 135.175,
+  "wall_clock_s": 197.949,
   "complete": true
 }

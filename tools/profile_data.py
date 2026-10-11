@@ -5,6 +5,7 @@
 Writes <out>/chips_profile.csv (one row per chip), <out>/summary.json and a manifest.
 """
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -30,7 +31,8 @@ def compact_crs(crs, bounds) -> str:
     """EPSG code if pyproj matches the header WKT AND both reproject the chip corners
     to EPSG:5070 within 1 mm; otherwise the full WKT (never a silent substitution)."""
     wkt = crs.to_wkt()
-    code = CRS.from_wkt(wkt).to_epsg(min_confidence=70)
+    m = re.search(r"UTM Zone (\d+), Northern Hemisphere", wkt)
+    code = CRS.from_wkt(wkt).to_epsg(min_confidence=70) or (32600 + int(m.group(1)) if m else None)
     if code is None:
         return wkt
     xs, ys = [bounds.left, bounds.right], [bounds.bottom, bounds.top]

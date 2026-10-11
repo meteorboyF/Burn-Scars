@@ -1,0 +1,9 @@
+# Local CPU model stack used for metric validation and smoke tests (2026-10-11).
+# torch from https://download.pytorch.org/whl/cpu. Licences: docs/DECISIONS.md D-017.
+torch==2.14.1
+torchvision==0.29.1
+terratorch==1.2.13
+segmentation-models-pytorch==0.5.0
+timm==1.0.30
+torchmetrics==1.9.0
+lightning==2.6.6

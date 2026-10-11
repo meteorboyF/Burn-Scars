@@ -105,3 +105,14 @@ def test_sigkilled_smoke_trainer_resumes_bit_identical(tmp_path):
     a = json.loads((tmp_path / "a" / RUN / "manifest.json").read_text())
     _, b = _sigkill_after_first_checkpoint(tmp_path / "b")
     assert a["extra"]["final_weights_sha256"] == b["extra"]["final_weights_sha256"]
+
+
+def test_deadline_stops_cleanly_and_resumes(tmp_path):
+    from burnscars.train.loop import DeadlineReached
+    ids, load_xy = _toy()
+    kw = dict(seed=3, epochs=2, batch_size=3, lr=1e-2, weight_decay=0.0, role="outer_test",
+              ckpt_every=1, log=lambda *_: None)
+    with pytest.raises(DeadlineReached):
+        train(_model(), ids[:8], ids[8:], load_xy, ckpt_dir=tmp_path, deadline_unix=0, **kw)
+    res = train(_model(), ids[:8], ids[8:], load_xy, ckpt_dir=tmp_path, **kw)
+    assert res["steps"] == res["max_steps"]

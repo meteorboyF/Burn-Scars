@@ -10,6 +10,7 @@ Writes to <outputs>/<out>/: manifest.json (train_split family + train/eval ids f
 the leakage guards), history.csv, per_chip.csv, preds.npz, model_final.pt.
 """
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -70,6 +71,8 @@ def main(argv=None):
     ap.add_argument("--ckpt_every", type=int, default=200)
     ap.add_argument("--out", default=None)
     ap.add_argument("--kill_after_step", type=int, default=None, help="CLI only: resume tests")
+    ap.add_argument("--cache_ram", type=lambda s: str(s).lower() == "true", default=False,
+                    help="keep decoded chips in RAM (GPU runs; ~5 GB for 684 chips, float32)")
     args, name, cfg = C.parse(ap, argv)
     check_tier(TIER, args.smoke)
     set_seed(args.seed)
@@ -95,6 +98,16 @@ def main(argv=None):
     if args.smoke:
         train_ids, eval_ids, size, epochs, bs = train_ids[:6], eval_ids[:3], 64, 2, 2
     store = ChipStore()
+    if args.cache_ram:
+        _read, _mem = store.read, {}
+
+        def cached_read(cid, size=None):
+            key = (cid, size)
+            if key not in _mem:
+                _mem[key] = _read(cid, size)
+            return _mem[key]
+        store.read = cached_read
+    deadline = os.environ.get("BURNSCARS_DEADLINE_UNIX")
     rec = RunRecorder("train_seg", name, cfg, seed=args.seed, smoke=args.smoke)
 
     if args.model == "unet":
@@ -138,7 +151,8 @@ def main(argv=None):
     res = train(model, train_ids, eval_ids, load_xy, seed=args.seed, epochs=epochs, batch_size=bs,
                 lr=args.lr, weight_decay=args.weight_decay, role=args.role, ckpt_dir=out / "ckpt",
                 ckpt_every=args.ckpt_every, device=device, augment=args.augment,
-                kill_after_step=args.kill_after_step)
+                kill_after_step=args.kill_after_step,
+                deadline_unix=float(deadline) if deadline else None)
     pd.DataFrame(res["history"]).to_csv(out / "history.csv", index=False)
     pd.DataFrame(res["per_chip"]).to_csv(out / "per_chip.csv", index=False, float_format="%.6g")
     np.savez_compressed(out / "preds.npz", **res["preds"])

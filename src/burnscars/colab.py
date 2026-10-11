@@ -71,3 +71,37 @@ def copy_to_drive(local_subdir: str) -> Path:
     shutil.copytree(src, dst, dirs_exist_ok=True)
     print(f"copied {src} -> {dst}")
     return dst
+
+
+def restore_data(config: str = "download_hls_burn_scars") -> None:
+    """Local copy of the dataset: from the Drive tarball cache if present (SHA-checked by
+    download_data), else downloaded once and the tarball copied to Drive for next time."""
+    import yaml
+    cfg = yaml.safe_load((REPO_ROOT / "configs" / f"{config}.yaml").read_text())
+    local = Path(os.environ["BURNSCARS_DATA_DIR"]) / cfg["subdir"]
+    cache = DRIVE_ROOT / "data_cache" / cfg["subdir"]
+    local.mkdir(parents=True, exist_ok=True)
+    for fname in cfg["files"]:
+        if (cache / fname).exists() and not (local / fname).exists():
+            (local / fname).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(cache / fname, local / fname)
+    run("download_data", config=config)  # verifies size + SHA256, extracts
+    cache.mkdir(parents=True, exist_ok=True)
+    for fname in cfg["files"]:
+        if not (cache / fname).exists():
+            (cache / fname).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(local / fname, cache / fname)
+
+
+def start_allocation(alloc_id: str, gpu_hours: float) -> float:
+    """Arm an APPROVED allocation (checked against docs/COMPUTE_LEDGER.md by gpu-tier tools)
+    and set a hard wall-clock deadline; training stops at a checkpoint when it passes."""
+    import time
+    from .hardware import approved_allocations
+    if alloc_id not in approved_allocations():
+        raise RuntimeError(f"{alloc_id} is not APPROVED in docs/COMPUTE_LEDGER.md at this commit")
+    deadline = time.time() + gpu_hours * 3600
+    os.environ["BURNSCARS_ALLOCATION"] = alloc_id
+    os.environ["BURNSCARS_DEADLINE_UNIX"] = str(deadline)
+    print(f"{alloc_id} armed: hard stop in {gpu_hours} h")
+    return deadline

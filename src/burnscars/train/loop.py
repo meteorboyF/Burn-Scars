@@ -26,6 +26,10 @@ from ..eval.metrics import aggregate, chip_scores
 ROLES = ("outer_test", "inner_val")
 
 
+class DeadlineReached(RuntimeError):
+    """The approved allocation's wall-clock budget ran out; the run is resumable."""
+
+
 def _order(seed, epoch, n):
     return np.random.default_rng((seed, epoch)).permutation(n)
 
@@ -80,7 +84,8 @@ def evaluate(model, items, load_xy, device, batch_size=4):
 
 
 def train(model, train_ids, eval_ids, load_xy, *, seed, epochs, batch_size, lr, weight_decay,
-          role, ckpt_dir, ckpt_every, device="cpu", augment=True, kill_after_step=None, log=print):
+          role, ckpt_dir, ckpt_every, device="cpu", augment=True, kill_after_step=None, log=print,
+          deadline_unix=None):
     """load_xy(chip_id, aug_k|None) -> (x float32 (C,H,W), y int64 (H,W)).
 
     Returns dict(history, final_eval, per_chip, preds, steps)."""
@@ -106,6 +111,9 @@ def train(model, train_ids, eval_ids, load_xy, *, seed, epochs, batch_size, lr, 
 
     t0 = time.time()
     while step < max_steps:
+        if deadline_unix is not None and time.time() > deadline_unix:
+            raise DeadlineReached(f"allocation deadline reached at step {step}/{max_steps}; "
+                                  "last checkpoint is on disk, rerun to resume")
         epoch, start = divmod(step, steps_per_epoch)
         if start == 0:
             ep_loss = []

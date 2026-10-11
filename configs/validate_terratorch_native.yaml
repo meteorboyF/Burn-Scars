@@ -1,0 +1,5 @@
+subdir: hls_burn_scars
+ckpt_subdir: prithvi2_burnscars
+out: results/metric_validation/terratorch_native_ibm_val_fp32
+precision: "32"
+batch_size: 4

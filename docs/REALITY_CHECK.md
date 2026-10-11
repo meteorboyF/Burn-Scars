@@ -143,3 +143,34 @@ before any learned-model result. Commit SHA: see the next line (added in the
 following commit, since a commit cannot contain its own SHA).
 ```
 E-01 amendment and H1-v2 committed in 4b6344c (2026-10-11), before any learned-model result.
+
+---
+
+```
+P-01  2026-10-11  status: REGISTERED — awaiting allocation A-001 (no run yet)
+Purpose: the K2 gate + a measured GPU throughput. UNet only (K2 is defined on it).
+Design: configs/grid/pilot_v1 (generated, immutable). Seed 0, 60 epochs fixed,
+  batch 8, AdamW wd 0.05, cosine, D4, fp32/TF32 (D-017). Tuning: lr in
+  {3e-4, 1e-3, 3e-3} on inner fold 0 of outer fold 0, RANDOM regime only; winner =
+  highest final-epoch inner-val pooled burned IoU (ties -> smaller lr); frozen for
+  5 random + 5 grouped (684 pool) + 1 as-published (official train -> official val).
+Geometry going in (VERIFIED): random-CV test chips touching a fold-train chip 32.0%,
+  within 5 km 40.9% (official split: 32.2% / 40.5%); grouped: 0% / 0%.
+Prediction band (pooled burned IoU, agent's judgement, ESTIMATED):
+  random-CV 74-86; grouped-CV 70-84; G = random - grouped in [+1.0, +6.0] pts;
+  as-published (official val) 68-82; NBR control G ~ 0 (measured +/-0.1).
+  Basis: PANGAEA UNet mIoU 84.51 on official val implies burned IoU ~72 if
+  unburned IoU ~97; PEFT UNet test mIoU 89.34 (IBM split) implies ~81.
+K2 (as registered, R0 controls) fires if |G| < 1.0 AND fold intervals overlap AND
+  the R0 distance-slope CI includes 0 -> STOP the topic. R1/R2 reported alongside.
+Stop rules (no partial pilot is reported as a result):
+  - Throughput: after 2 epochs of the first tuning run, if the projected pilot
+    wall-clock exceeds the approved cap, stop and re-cost (a >2x miss vs the
+    upper estimate means the costing method is broken; fix before spending more).
+  - Sanity: NaN loss, or tuned inner-val pooled burned IoU below the NBR control
+    (46 pts) -> stop; debug on CPU (bug, not science).
+  - Hard deadline from start_allocation; runs stop at a checkpoint and are resumable.
+Cost: A-001 = A100 0.8-1.7 GPU-h (ESTIMATED) -> request cap 2.0 GPU-h;
+  or L4 2.8-5.2 -> cap 5.5 GPU-h.
+Outcome:
+```

@@ -66,8 +66,16 @@ every read logged in docs/QUARANTINE_LOG.md.
 | Files | `training_chips.tgz` 10,601,018,926 B; `validation_chips.tgz` 1,179,542,384 B; `chips_df.csv`; `training_data.txt`; `validation_data.txt` | VERIFIED |
 | Content | 3,854 chips, 224×224, 30 m, 18 bands (6 HLS S30 bands × 3 dates, 2022), CONUS; labels from USDA CDL (13 classes + no-data 0); random 80/20 split | VERIFIED (card) |
 | **Georeferencing** | **YES**: chips are GeoTIFFs in **EPSG:5070** (CDL grid), 30 m, 6.72 km wide. Checked by reading 4 complete files from the first 2 MB of `validation_chips.tgz` (HTTP range request; nothing else fetched; scratch copy deleted). `chips_df.csv` also gives each chip's MGRS tile and the 3 image dates | VERIFIED (4 files) |
-| Download | requires explicit user approval (10.6 GB) | — |
+| Download | not stored. Header-only stream audit (user-approved bandwidth 2026-10-11): both archives streamed once, SHA256 verified in flight (training 10,601,018,926 B `373cc94b…`; validation 1,179,542,384 B `d6e616cc…`), pixels discarded | VERIFIED |
+| Footprint audit (results/crop_audit) | 3,854 chips, all EPSG:5070, 224×224, 6.72 km on a regular grid; scene/mask headers agree; lists match archives (3,083 / 771). Val→train: 536/771 = 69.5% touching (edge/corner, distance 0), 87.0% within 10 km; 0 area overlaps; 0 repeats (single year); 244/425 tiles shared; 762/771 val chips on shared tiles; 5 km groups 1,497 (largest 114) | VERIFIED |
 
 ## Not used
 
 Sen1Floods11: licence unresolved at the original source (standing rule).
+
+## Metric validation (published Prithvi-EO-2.0 BurnScars checkpoint, IBM val, CPU)
+
+Ours (fp32): IoU-burned 82.32, mIoU 89.75 — identical to TerraTorch 1.2.13's own
+`validate` (0.8231562 / 0.8975374) and to torchmetrics macro (1e-7). Card: 84.28 /
+90.95 → not reproduced (−1.96 / −1.20; cause UNRESOLVED; D-020). Validates metric +
+preprocessing only. results/metric_validation/.

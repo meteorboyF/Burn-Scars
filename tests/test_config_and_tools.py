@@ -56,7 +56,9 @@ def test_tiers(monkeypatch):
 
 def test_approved_allocations_parse(tmp_path):
     led = tmp_path / "L.md"
-    led.write_text("| A-001 | pilot | 3 GPU-h | APPROVED |\n| A-002 | full | 30 | REQUESTED |\n")
+    led.write_text("| Id | Purpose | GPU-h | Status |\n|---|---|---|---|\n"
+                   "| A-001 | pilot | 3 GPU-h | APPROVED |\n| A-002 | full | 30 | REQUESTED |\n"
+                   "| A-003 | x | 1 | NOT APPROVED |\n| A-004 | APPROVED purpose text | 1 | REQUESTED |\n")
     assert approved_allocations(led) == {"A-001"}
 
 

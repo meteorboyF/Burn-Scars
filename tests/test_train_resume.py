@@ -96,8 +96,8 @@ def test_sigkilled_smoke_trainer_resumes_and_completes(tmp_path):
 
 @NEEDS_DATA
 @pytest.mark.xfail(strict=False, reason=(
-    "Bitwise identity after a real SIGKILL held in 10/10 idle-machine trials but failed in 3 of ~20 "
-    "trials under heavy concurrent CPU load (root cause not identified; model-state hashes are now "
+    "Bitwise identity after a real SIGKILL held in 10/10 trials of an idle-machine probe but failed in "
+    "6 of ~29 SIGKILL trials overall (root cause not identified; model-state hashes are now "
     "recorded in checkpoint meta to diagnose). Simulated-kill resumes are always bit-identical "
     "(test above). docs/DECISIONS.md D-019."))
 def test_sigkilled_smoke_trainer_resumes_bit_identical(tmp_path):

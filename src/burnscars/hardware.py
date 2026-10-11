@@ -34,7 +34,16 @@ def approved_allocations(ledger=None) -> set[str]:
         text = open(ledger).read()
     except OSError:
         return set()
-    return {m.group(1) for m in re.finditer(r"^\|\s*(A-\d{3})\s*\|.*\bAPPROVED\b", text, re.M)}
+    out = set()
+    header = None
+    for line in text.splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if "Status" in cells and cells[0] == "Id":
+            header = cells
+        elif header and re.fullmatch(r"A-\d{3}", cells[0]) and len(cells) == len(header):
+            if cells[header.index("Status")] == "APPROVED":  # exact cell, not a substring
+                out.add(cells[0])
+    return out
 
 
 def check_tier(tier: str, smoke: bool) -> None:

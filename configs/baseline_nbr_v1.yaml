@@ -1,0 +1,10 @@
+# Trivial baselines + leakage control. Threshold tuned on each fold's TRAIN chips only.
+subdir: hls_burn_scars
+out: results/baselines/nbr_v1
+split_files:
+  - splits/v1/official.json
+  - splits/v1/ibm_trainval.json
+  - splits/v1/random_cv5_all804.json
+  - splits/v1/grouped_cv5_all804.json
+  - splits/v1/random_cv5_ibm_trainval.json
+  - splits/v1/grouped_cv5_ibm_trainval.json

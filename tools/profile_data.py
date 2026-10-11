@@ -12,6 +12,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import rasterio
+from pyproj import CRS, Transformer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
@@ -25,12 +26,25 @@ TIER = "cpu"
 BANDS = ["B02", "B03", "B04", "B8A", "B11", "B12"]
 
 
+def compact_crs(crs, bounds) -> str:
+    """EPSG code if pyproj matches the header WKT AND both reproject the chip corners
+    to EPSG:5070 within 1 mm; otherwise the full WKT (never a silent substitution)."""
+    wkt = crs.to_wkt()
+    code = CRS.from_wkt(wkt).to_epsg(min_confidence=70)
+    if code is None:
+        return wkt
+    xs, ys = [bounds.left, bounds.right], [bounds.bottom, bounds.top]
+    a = Transformer.from_crs(CRS.from_wkt(wkt), "EPSG:5070", always_xy=True).transform(xs, ys)
+    b = Transformer.from_crs(f"EPSG:{code}", "EPSG:5070", always_xy=True).transform(xs, ys)
+    return f"EPSG:{code}" if np.allclose(a, b, atol=1e-3, rtol=0) else wkt
+
+
 def profile_chip(root: Path, row) -> dict:
     out = {"chip_id": row.chip_id}
     with rasterio.open(root / row.scene_path) as s:
         x = s.read()
         out |= {"scene_count": s.count, "scene_dtype": s.dtypes[0], "height": s.height,
-                "width": s.width, "crs": s.crs.to_string() if s.crs else None,
+                "width": s.width, "crs": compact_crs(s.crs, s.bounds),
                 "res_x": s.res[0], "res_y": s.res[1], "scene_nodata_hdr": s.nodata,
                 "left": s.bounds.left, "bottom": s.bounds.bottom, "right": s.bounds.right,
                 "top": s.bounds.top, "band_desc": "|".join(str(d) for d in s.descriptions)}
